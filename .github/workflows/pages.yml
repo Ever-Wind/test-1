@@ -1,0 +1,55 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Prepare .env
+        run: |
+          cp .env.example .env
+          printf '%s\n' 'VITE_SITE_URL = "ever-wind.github.io/test-1"' >> .env
+          printf '%s\n' 'VITE_SITE_LOGO = "/test-1/images/icon/favicon.ico"' >> .env
+          printf '%s\n' 'VITE_SITE_MAIN_LOGO = "/test-1/images/icon/logo.png"' >> .env
+          printf '%s\n' 'VITE_SITE_APPLE_LOGO = "/test-1/images/logo/apple-touch-icon.png"' >> .env
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Build
+        run: pnpm exec vite build --base=/test-1/
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
+          user_name: Ever-Wind
+          user_email: 3519513660@qq.com
