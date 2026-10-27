@@ -32,12 +32,7 @@ jobs:
           cache: pnpm
 
       - name: Prepare .env
-        run: |
-          cp .env.example .env
-          printf '%s\n' 'VITE_SITE_URL = "ever-wind.github.io/test-1"' >> .env
-          printf '%s\n' 'VITE_SITE_LOGO = "/test-1/images/icon/favicon.ico"' >> .env
-          printf '%s\n' 'VITE_SITE_MAIN_LOGO = "/test-1/images/icon/logo.png"' >> .env
-          printf '%s\n' 'VITE_SITE_APPLE_LOGO = "/test-1/images/logo/apple-touch-icon.png"' >> .env
+        run: cp .env.example .env
 
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
