@@ -10,7 +10,7 @@
         @mouseenter="socialTip = item.tip"
         @mouseleave="socialTip = '通过这里联系我吧'"
       >
-        <img class="icon" :src="item.icon" height="24" />
+        <img class="icon" :src="withBase(item.icon)" height="24" />
       </a>
     </div>
     <span class="tip">{{ socialTip }}</span>
@@ -19,6 +19,9 @@
 
 <script setup>
 import socialLinks from "@/assets/socialLinks.json";
+
+// 资源路径按部署子路径（BASE_URL）拼接，避免项目页部署时 404
+const withBase = (path) => import.meta.env.BASE_URL + String(path).replace(/^\/+/, "");
 
 // 社交链接提示
 const socialTip = ref("通过这里联系我吧");
